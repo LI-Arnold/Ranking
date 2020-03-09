@@ -43,9 +43,11 @@ void free_matrice(Matrice *M) {
 
 // Methode des puissances
 void puissance(Matrice M, double *x, int k, double *y){
-	
-	for(int j=0;i<M->n;j++){
-		
+	int i,j;
+	for(i=0;i<M.n;i++){
+		for (j = M.debCol[i]; j < M.debCol[i + 1]; j++) {
+				y[i] += x[M.T[j].i] * M.T[j].p;
+			}
 	}
 }
 
