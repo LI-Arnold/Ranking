@@ -41,8 +41,17 @@ void free_matrice(Matrice *M) {
 	free(M->debCol);
 }
 
-int main(){
+// Methode des puissances
+void puissance(Matrice M, double *x, int k, double *y){
 	
+	for(int j=0;i<M->n;j++){
+		
+	}
+}
+
+
+
+int main(){
 	
 	
 	
