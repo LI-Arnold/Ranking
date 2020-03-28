@@ -38,6 +38,27 @@ void init_matrice(Matrice *M, int m, int n) {
 	}
 }
 
+void remplir_Matrice(Matrice *M,FILE *f){
+	
+	int i,j;
+	int n,m,d;
+	double p;
+    
+    fscanf (f,"%d %d",&m, &n);
+    init_matrice(M,m,n);
+    
+    for(j=0;j<n;j++){
+		fscanf(f,"%d %d",&M->T->i, &d);
+		M->T->i -= 1;
+		for(i=0;i<d;i++){				
+			fscanf(f,"%d %lf",&M->T->i, &p);
+			M->T->j -= 1;
+					
+			M->T->p = p;
+		}
+	}
+}
+
 void free_matrice(Matrice *M) {
 	free(M->T);
 	free(M->debCol);
