@@ -312,16 +312,20 @@ int main(){
 	int i;
 	
     printf("Result of Gauss-Seidel method:\n");
-    double *k = malloc((MAX_SIZE) * sizeof(double));
-    k = Gauss_Seidel( M, x, TOL, MAXN );
+    double *z = malloc((MAX_SIZE) * sizeof(double));
+    z = Gauss_Seidel( M, x, TOL, MAXN );
     for(i = 0; i < MAX_SIZE; i++){
-		printf("[%.8lf]\t", k[i]);		
+		printf("[%.8lf]\t", z[i]);		
 	}
     
+   
 	
+	double res[M.n];
 	
+	resultat(M,y,z,res);
+	affiche_vecteur(res, M.n);
 	
-	//free_matrice(M);
+	//free_matrice(&M);
 	
 	
 	
