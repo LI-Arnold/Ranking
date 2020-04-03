@@ -106,6 +106,7 @@ void puissance(Matrice M, double *x, int k, double *y){
 
 
 
+
 double * Gauss_Seidel ( Matrice a, double x[], double TOL, int MAXN )
 {
     //Turning "ax=b" into "x=Bx+f"
@@ -176,7 +177,7 @@ double * Gauss_Seidel ( Matrice a, double x[], double TOL, int MAXN )
     
   	//Iteration
     l = 0; //nombre d'itération k=0
-    double *x_kp1 = malloc((MAX_SIZE) * sizeof(double)); //Créez un nouveau tableau pour stocker la valeur d'itération de x après la k + 1ème fois
+    double *x_kp1 = x; //Créez un nouveau tableau pour stocker la valeur d'itération de x après la k + 1ème fois
     
     double sum;
     double max = 0; //Utilisé pour calculer la différence
@@ -277,7 +278,7 @@ void init_vecteur(double * V, int taille){
 	int i; 
 	
 	for(i = 0; i<taille ; i++){
-		V[i] = 1;
+		V[i] = (1.0 / taille * 1.0);
 	}
 	printf("\n");
 }
@@ -311,7 +312,9 @@ int main(){
 	double TOL = 10.0;
 	int i;
 	
+	
     printf("Result of Gauss-Seidel method:\n");
+    
     double *z = malloc((MAX_SIZE) * sizeof(double));
     z = Gauss_Seidel( M, x, TOL, MAXN );
     for(i = 0; i < MAX_SIZE; i++){
