@@ -81,13 +81,34 @@ void free_matrice(Matrice *M) {
 }
 
 // Methode des puissances
-void puissance(Matrice* M, double *x, double *y,int k){
+double * puissance(Matrice* M, double *x,double *y){
 	int i;
 	for(i=0;i<M->m;i++){
 		y[i] = 0;
 		y[M->T[i].j] += x[M->T[i].i] * M->T[i].p;
 		
 	}
+	return y;
+}
+
+double * multpuissance(Matrice* M,double &x[],double &y[],int num){
+	int i=0;
+	double *tmp = x;
+	for(i=0;i<num;i++)
+	{
+		
+		tmp=puissance(M,tmp,y);
+		
+		
+		 
+	
+	
+		
+	
+	return tmp;
+	
+	
+	
 }
 
 
@@ -95,11 +116,12 @@ void puissance(Matrice* M, double *x, double *y,int k){
 
 
 
-double * Gauss_Seidel ( Matrice* a, double x[], double TOL, int MAXN )
+double * Gauss_Seidel ( Matrice* a, double x[], double TOL, int MAXN,double y[],double *z )
 {
     //Turning "ax=b" into "x=Bx+f"
     //double B[MAX_SIZE][MAX_SIZE]; 
     Matrice* B = init_matrice(a->m, a->n);
+    
     
     int i,j, k, l, tmp1, tmp2;
     l = 0;
@@ -165,27 +187,27 @@ double * Gauss_Seidel ( Matrice* a, double x[], double TOL, int MAXN )
     
   	//Iteration
     l = 0; //nombre d'itération k=0
-    double *x_kp1 = x; //Créez un nouveau tableau pour stocker la valeur d'itération de x après la k + 1ème fois
+    double *x_kp1 = y; //Créez un nouveau tableau pour stocker la valeur d'itération de x après la k + 1ème fois
     
     double sum;
     double max = 0; //Utilisé pour calculer la différence
     
     
-    while(k<MAXN)
-    {
-        l++;
-        for(i=0;i<MAX_SIZE;i++)
-        {
+    for(i=0;i<a->m;i++){
+		z[i] = 0;
+        
+        
             sum = 0;
             for(j=0;j<MAX_SIZE;j++)
             {
+				
                 if(j<i)
                 {
 					 // sum += a[i][j]*x_kp1[j];
 					for(k = 0 ; k < a->n ; k++)
 					{
 						if((a->T[k].i == i) && (a->T[k].j == j))
-							sum += a->T[k].p * x_kp1[j];
+							z[i] += a->T[k].p * x_kp1[j];
 					}
 				}
                  
@@ -194,7 +216,7 @@ double * Gauss_Seidel ( Matrice* a, double x[], double TOL, int MAXN )
 					for(k = 0 ; k < a->n ; k++)
 					{
 						if((a->T[k].i == i) && (a->T[k].j == j))
-							sum += a->T[k].p * x[j];
+							z[i] += a->T[k].p * x[j];
 					}
 				}
             }
@@ -202,48 +224,18 @@ double * Gauss_Seidel ( Matrice* a, double x[], double TOL, int MAXN )
             for(k = 0 ; k < a->n ; k++)
 			{
 				if((a->T[k].i == i) && (a->T[k].j == i))
-					x_kp1[i] = sum/(1 - a->T[k].p );
+					z[i] = z[i]/(1 - a->T[k].p );
 					
 			}
-        }
         
         
         
-        //Trouver la norme infinie de la différence entre x à la k + 1ème itération et x à la kème itération
-        max = fabs(x_kp1[0]-x[0]);
-        for(i=1;i<MAX_SIZE;i++)
-        {
-            if(max<fabs(x_kp1[i]-x[i]))
-                max = fabs(x_kp1[i]-x[i]);
-        }
-        //Si une valeur de composant de x dans la kème itération dépasse l'intervalle maximum [-bound, bound] limite
-        //La fonction Gauss_Seidel renvoie -2 
-		
-        for(i=0;i<MAX_SIZE;i++)
-        {
-            //if(fabs(x_kp1[i])>bound)
-               //return 2;
-               
-            x[i] = x_kp1[i]; 
-        }
-
-        for(i=0;i<MAX_SIZE;i++)
-            x[i] = x_kp1[i]; 	//Réutiliser le vecteur x pour stocker la valeur x de la k-ième itération
-        //Si l'exigence de précision TOL est atteinte après k itérations
-         //La fonction Gauss_Seidel retourne la valeur de k (la solution obtenue est stockée dans x)
-        
-        //if(max<TOL)
-         //  return k;
         
         
-         
-    }
-    
-   // Si l'algorithme n'a pas atteint l'exigence de précision TOL après les itérations MAXN
-    // La fonction Gauss_Seidel retourne 0
 	free_matrice(B);
-    return x_kp1;
+    return z;
    
+}
 }
 
 
@@ -288,13 +280,15 @@ int main(){
 	
 	init_vecteur(x, M->n);
 	affiche_vecteur(x, M->n);
-	double* y = (double*)malloc(maxN * sizeof(double));
 	
-	puissance(M,x,y,10);
-	affiche_vecteur(y, M->n);
+	double* Y = (double*)malloc(maxN * sizeof(double));
+	double* yk = (double*)malloc(maxN * sizeof(double));
+	Y=puissance(M,x,Y);
+	yk=multpuissance(M,x,Y,10);
+	affiche_vecteur(yk, M->n);
 	
 	
-	int MAXN = 10; //Nbre d'itération max
+	int MAXN = 100; //Nbre d'itération max
 	double TOL = 10.0;
 	int i;
 	
@@ -302,7 +296,7 @@ int main(){
     printf("Result of Gauss-Seidel method:\n");
     
     double *z = (double*)malloc((MAX_SIZE) * sizeof(double));
-    z = Gauss_Seidel(M, x, TOL, MAXN );
+    z = Gauss_Seidel(M, x, TOL, MAXN ,Y,z);
     for(i = 0; i < MAX_SIZE; i++){
 		printf("[%.8lf]\t", z[i]);		
 	}
@@ -311,7 +305,7 @@ int main(){
 	
 	double* res = (double*)malloc(maxN * sizeof(double));
 	
-	resultat(M,y,z,res);
+	resultat(M,Y,z,res);
 	affiche_vecteur(res, M->n);
 	
 	free_matrice(M);
@@ -320,7 +314,7 @@ int main(){
 	
 	
 	free(x);
-	free(y);
+	free(Y);
 	free(res);
 	return 0;
 }
