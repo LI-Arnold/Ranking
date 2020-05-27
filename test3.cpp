@@ -91,7 +91,7 @@ double * puissance(Matrice* M, double *x,double *y){
 	return y;
 }
 
-double * multpuissance(Matrice* M,double &x[],double &y[],int num){
+double * multpuissance(Matrice* M,double *x,double *y,int num){
 	int i=0;
 	double *tmp = x;
 	for(i=0;i<num;i++)
@@ -100,7 +100,7 @@ double * multpuissance(Matrice* M,double &x[],double &y[],int num){
 		tmp=puissance(M,tmp,y);
 		
 		
-		 
+	 }
 	
 	
 		
@@ -108,8 +108,8 @@ double * multpuissance(Matrice* M,double &x[],double &y[],int num){
 	return tmp;
 	
 	
-	
-}
+ }
+
 
 
 
