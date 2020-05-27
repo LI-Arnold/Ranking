@@ -85,7 +85,7 @@ void puissance(Matrice* M, double *x, double *y,int k){
 	int i;
 	for(i=0;i<M->m;i++){
 		y[i] = 0;
-		y[M->T[i].j] += x[M->T[i].i] * pow(M->T[i].p,k);
+		y[M->T[i].j] += x[M->T[i].i] * M->T[i].p;
 		
 	}
 }
